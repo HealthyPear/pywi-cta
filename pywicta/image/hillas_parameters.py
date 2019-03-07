@@ -27,14 +27,15 @@ Warning: so far, this module only works with "rectangular 2D images", but it
 handle "missing pixels" (i.e. NaN values).
 """
 
-from ctapipe.image.hillas import hillas_parameters_1
-from ctapipe.image.hillas import hillas_parameters_2
-from ctapipe.image.hillas import hillas_parameters_3
-from ctapipe.image.hillas import hillas_parameters_4
+# from ctapipe.image.hillas import hillas_parameters_1
+# from ctapipe.image.hillas import hillas_parameters_2
+# from ctapipe.image.hillas import hillas_parameters_3
+# from ctapipe.image.hillas import hillas_parameters_4
+from ctapipe.image.hillas import hillas_parameters
 
 from ctapipe.instrument import CameraGeometry
 
-def get_hillas_parameters(geom: CameraGeometry, image, implementation=4):
+def get_hillas_parameters(geom: CameraGeometry, image):
     r"""Return Hillas parameters [hillas]_ of the given ``image``.
 
     Short description of Hillas parameters:
@@ -66,9 +67,6 @@ def get_hillas_parameters(geom: CameraGeometry, image, implementation=4):
     image : Numpy array
         The image to parametrize
 
-    implementation : integer
-        Tell which ctapipe's implementation to use (1 or 2).
-
     Returns
     -------
     namedtuple
@@ -82,16 +80,6 @@ def get_hillas_parameters(geom: CameraGeometry, image, implementation=4):
 
     # Copy image to prevent tricky bugs
     image = image.copy()
-
-    if implementation == 1:
-        params = hillas_parameters_1(geom, image)
-    elif implementation == 2:
-        params = hillas_parameters_2(geom, image)
-    elif implementation == 3:
-        params = hillas_parameters_3(geom, image)
-    elif implementation == 4:
-        params = hillas_parameters_4(geom, image)
-    else:
-        raise ValueError("Wrong Hillas implementation ID.")
+    params = hillas_parameters(geom, image)
 
     return params

@@ -28,7 +28,8 @@ import argparse
 
 import ctapipe
 import ctapipe.visualization
-from ctapipe.io.hessio import hessio_event_source
+#from ctapipe.io.hessio import hessio_event_source
+from ctapipe.io import event_source
 
 from matplotlib import pyplot as plt
 
@@ -50,9 +51,11 @@ def count_simtel_events(simtel_file_path):
     # Parameters:
     # - max_events: maximum number of events to read
     # - allowed_tels: select only a subset of telescope, if None, all are read.
-    source = hessio_event_source(simtel_file_path,
-                                 allowed_tels=None,
-                                 max_events=None)
+    source = event_source(
+        simtel_file_path,
+        allowed_tels=None,
+        max_events=None
+    )
 
     num_event_dict = {}   # Number of events per telescope
     total_num_events = 0  # Total number of events
@@ -106,9 +109,11 @@ def list_simtel_content(simtel_file_path):
     # Parameters:
     # - max_events: maximum number of events to read
     # - allowed_tels: select only a subset of telescope, if None, all are read.
-    source = hessio_event_source(simtel_file_path,
-                                 allowed_tels=[1],  
-                                 max_events=1)
+    source = event_source(
+        simtel_file_path,
+        allowed_tels=None,
+        max_events=None
+    )
 
     for event in source:
         print("Count:", event["count"])
@@ -154,9 +159,14 @@ def show_image(simtel_file_path, tel_num=1, channel=0, event_index=0):
     # Parameters:
     # - max_events: maximum number of events to read
     # - allowed_tels: select only a subset of telescope, if None, all are read.
-    source = hessio_event_source(simtel_file_path,
-                                 allowed_tels=[tel_num],
-                                 max_events=event_index+1)
+    source = event_source(
+        simtel_file_path,
+        allowed_tels=[tel_num],
+        max_events=event_index+1
+    )
+    # source = hessio_event_source(simtel_file_path,
+    #                              allowed_tels=[tel_num],
+    #                              max_events=event_index+1)
 
     event_list = list(source)          # TODO
     event = event_list[event_index]    # TODO
@@ -241,9 +251,14 @@ def show_pe_image(simtel_file_path, tel_num=1, channel=0, event_index=0):
     # Parameters:
     # - max_events: maximum number of events to read
     # - allowed_tels: select only a subset of telescope, if None, all are read.
-    source = hessio_event_source(simtel_file_path,
-                                 allowed_tels=[tel_num],
-                                 max_events=event_index+1)
+    source = event_source(
+        simtel_file_path,
+        allowed_tels=[tel_num],
+        max_events=event_index+1
+    )
+    # source = hessio_event_source(simtel_file_path,
+    #                              allowed_tels=[tel_num],
+    #                              max_events=event_index+1)
 
     event_list = list(source)          # TODO
     event = event_list[event_index]    # TODO

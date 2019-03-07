@@ -60,12 +60,13 @@ from traitlets.config import Config
 import ctapipe
 import pyhessio
 from ctapipe.image.hillas import HillasParameterizationError
-from ctapipe.io.hessio import hessio_event_source
+from ctapipe.io import event_source
 from ctapipe.instrument import CameraGeometry
 from ctapipe.calib import CameraCalibrator
 import ctapipe.visualization
 
-from pywicta.image.hillas_parameters import get_hillas_parameters
+# from pywicta.image.hillas_parameters import get_hillas_parameters
+from ctapipe.image.hillas import hillas_parameters
 from pywicta.io import geometry_converter
 
 DEBUG = False
@@ -796,7 +797,7 @@ def simtel_images_generator(file_path,
     file_path = os.path.expanduser(file_path)
 
     tel_filter_set = set() if tel_filter_list is None else set(tel_filter_list)
-    source = hessio_event_source(file_path, allowed_tels=tel_filter_set)
+    source = event_source(file_path, allowed_tels=tel_filter_set)
 
     # CONFIGURE THE CALIBRATOR ################################################
 
@@ -1321,7 +1322,8 @@ def plot_hillas_parameters_on_axes(ax,
 
     try:
         if hillas_params is None:
-            hillas_params = get_hillas_parameters(geom, image, implementation=hillas_implementation)
+            hillas_params = hillas_parameters(geom, image)
+            # hillas_params = get_hillas_parameters(geom, image, implementation=hillas_implementation)
 
         centroid = (hillas_params.x.value, hillas_params.y.value)
         length = hillas_params.length.value
@@ -1392,9 +1394,10 @@ def print_hillas_parameters(image,
     geom = geometry_converter.get_geom1d(cam_id)
 
     try:
-        hillas_params = get_hillas_parameters(geom,
-                                              image,
-                                              implementation=implementation)
+        hillas_params = hillas_parameters(geom, image)
+        # hillas_params = get_hillas_parameters(geom,
+        #                                       image,
+        #                                       implementation=implementation)
 
         print("x:...",     hillas_params.x)
         print("y:...",     hillas_params.y)
@@ -1429,9 +1432,10 @@ def hillas_parameters_to_df(image,
     df = pd.DataFrame(data=data, columns=columns)
 
     try:
-        hillas_params = get_hillas_parameters(geom,
-                                              image,
-                                              implementation=implementation)
+        hillas_params = hillas_parameters(geom, image)
+        # hillas_params = get_hillas_parameters(geom,
+        #                                       image,
+        #                                       implementation=implementation)
         df.loc[0, "cen_x_m"] = hillas_params.x.to(u.meter).value
         df.loc[0, "cen_y_m"] = hillas_params.y.to(u.meter).value
 
